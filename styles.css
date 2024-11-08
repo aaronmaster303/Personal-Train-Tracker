@@ -25,6 +25,11 @@ body {
 	margin: 20px 0;
 }
 
+.inputs {
+	display: flex;
+	flex-direction: column;
+}
+
 h1 {
 	color: #333;
 	margin-top: 0;
@@ -64,6 +69,7 @@ li {
 /* Button styles */
 .button-container {
 	margin-bottom: 20px;
+	margin-top: 10px;
 	display: flex;
 	justify-content: space-around;
 }
@@ -92,12 +98,28 @@ li {
 }
 
 .line-container {
-	margin-bottom: 20px;
-	display: inline-block;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	align-self: center;
+}
+
+.line-select {
+	margin-left: 4px;
+}
+
+.alert-button {
+	margin-left: 10px;
+	background: none;
+	/* padding: 0; */
+	cursor: pointer;
+	font-size: 20px;
 }
 
 .switch-container {
 	display: flex;
+	flex-direction: row;
+	align-self: center;
 	align-items: center;
 	margin-top: 12px;
 }

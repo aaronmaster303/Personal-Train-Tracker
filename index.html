@@ -9,9 +9,12 @@
 	<body>
 		<div class="container">
 			<h1>MBTA Train Tracker</h1>
-			<div class="line-container">
-				<label for="lineSelect">Select Line:</label>
-				<select id="lineSelect"></select>
+			<div class="inputs">
+				<div class="line-container">
+					<label for="lineSelect">Select Line: </label>
+					<select id="lineSelect" class="line-select"></select>
+					<button id="alertButton" class="alert-button">⚠️</button>
+				</div>
 				<div class="switch-container">
 					<span class="label" id="trainLabel">Train</span>
 					<label class="switch">
@@ -20,23 +23,23 @@
 					</label>
 					<span class="label" id="busLabel">Bus</span>
 				</div>
-			</div>
-			<div class="button-container">
-				<button
-					id="directionButton"
-					data-direction="0"
-					class="direction-button"
-				>
-					↑
-				</button>
-				<div class="direction-label">Direction</div>
-				<button
-					id="directionButton"
-					data-direction="1"
-					class="direction-button selected"
-				>
-					↓
-				</button>
+				<div class="button-container">
+					<button
+						id="directionButton"
+						data-direction="0"
+						class="direction-button"
+					>
+						↑
+					</button>
+					<div class="direction-label">Direction</div>
+					<button
+						id="directionButton"
+						data-direction="1"
+						class="direction-button selected"
+					>
+						↓
+					</button>
+				</div>
 			</div>
 			<hr />
 			<ul id="stopsList"></ul>

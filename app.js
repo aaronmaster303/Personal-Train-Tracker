@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
 	const directionButtons = document.querySelectorAll(".direction-button");
 	const lineSelect = document.getElementById("lineSelect");
 	const busSlider = document.getElementById("busSlider");
+	const alertButton = document.getElementById("alertButton");
 
 	let stops = [];
+	let alerts = [];
 	let direction = parseInt(getCookie("direction") || "1"); // Default direction is Inbound
 	let selectedLine = getCookie("selectedLine") || "Green-E"; // Get from cookie or default to "Green-E"
 	let selectedBus = getCookie("selectedBus") || "39";
@@ -15,9 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	const SERVER_BASE_URL =
 		"https://simple-train-tracker-app-server-production.up.railway.app";
-
-	// const SERVER_BASE_URL = "http://localhost:3000";
-	// const SERVER_BASE_URL = 'http://172.20.0.25:3000';
 
 	function stringToBoolean(str) {
 		return str.toLowerCase() === "true";
@@ -57,6 +56,29 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 		return "";
+	}
+
+	async function fetchAlerts() {
+		const url = `${SERVER_BASE_URL}/alerts?route=${selected}`;
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			alerts = data.data;
+			displayAlerts();
+		} catch (error) {
+			message.textContent = "Error fetching alerts.";
+			message.style.color = "red";
+			console.error("Error fetching alerts:", error);
+		}
+	}
+
+	function displayAlerts() {
+		if (alerts.length > 0) {
+			alertButton.style.display = "block";
+			console.log(alerts);
+		} else {
+			alertButton.style.display = "none";
+		}
 	}
 
 	async function fetchSubwayLines() {
@@ -239,6 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			: setCookie("selectedLine", selected, 7);
 
 		updateLineColors(selected);
+		fetchAlerts();
 
 		if (busChecked) {
 			fetchStopsBus().then(() => {
@@ -296,6 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	if (busChecked) {
 		fetchSubwayLines().then(() => {
 			fetchStopsBus().then(() => {
+				fetchAlerts();
 				setDirectionButton();
 				fetchTrainLocations();
 				setInterval(fetchTrainLocations, 1000);
@@ -304,6 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	} else {
 		fetchSubwayLines().then(() => {
 			fetchStops().then(() => {
+				fetchAlerts();
 				setDirectionButton();
 				fetchTrainLocations();
 				setInterval(fetchTrainLocations, 1000);
