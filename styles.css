@@ -188,3 +188,65 @@ input:checked + .slider:before {
 	padding: 10px;
 	font-weight: bold;
 }
+
+.styled-list {
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+}
+
+.styled-list-item {
+	border-bottom: 1px solid #ccc;
+	padding: 15px 0;
+}
+
+.styled-list-header {
+	display: flex;
+	align-items: center;
+	width: 100%; /* Make header take full width of the list item */
+	padding: 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	flex-wrap: wrap;
+	text-align: justify;
+}
+
+.styled-list-header:hover {
+	background-color: #eaeaea;
+}
+
+.styled-list-title {
+	font-weight: bold;
+	font-size: 1.2em;
+	color: #333;
+}
+
+.styled-list-badge {
+	color: #333;
+	border-radius: 20px;
+	padding: 5px 10px;
+	font-size: 0.9em;
+	font-weight: bold;
+	margin-left: 10px;
+}
+
+.styled-list-arrow {
+	font-size: 1.2em;
+	margin-left: auto; /* Push arrow to the rightmost side */
+	transition: transform 0.3s ease;
+}
+
+.styled-list-arrow.rotate {
+	transform: rotate(180deg); /* Rotate arrow down when clicked */
+}
+
+.styled-list-description {
+	display: none;
+	margin-top: 10px;
+	color: #555;
+	font-size: 1em;
+}
+
+.styled-list-description.show {
+	display: block;
+}

@@ -13,7 +13,7 @@
 				<div class="line-container">
 					<label for="lineSelect">Select Line: </label>
 					<select id="lineSelect" class="line-select"></select>
-					<button id="alertButton" class="alert-button">⚠️</button>
+					<div id="alertButton" title="Show/Hide Alerts" class="alert-button">⚠️</div>
 				</div>
 				<div class="switch-container">
 					<span class="label" id="trainLabel">Train</span>
@@ -42,8 +42,10 @@
 				</div>
 			</div>
 			<hr />
-			<ul id="stopsList"></ul>
-			<p id="message"></p>
+			<ul id="stopsList" style="display: block"></ul>
+			<ul id="alertsList" class="styled-list" style="display: none"></ul>
+			<p id="message" style="display: block"</p>
+			<p id="alertsMessage" style="display: none"></p>
 		</div>
 		<script src="app.js"></script>
 	</body>

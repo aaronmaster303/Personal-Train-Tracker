@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
 	const stopsList = document.getElementById("stopsList");
 	const message = document.getElementById("message");
+	const alertsMessage = document.getElementById("alertsMessage");
 	const directionButtons = document.querySelectorAll(".direction-button");
 	const lineSelect = document.getElementById("lineSelect");
 	const busSlider = document.getElementById("busSlider");
 	const alertButton = document.getElementById("alertButton");
+	const alertsList = document.getElementById("alertsList");
+	alertButton.onclick = toggleAlerts;
 
 	let stops = [];
 	let alerts = [];
@@ -38,6 +41,23 @@ document.addEventListener("DOMContentLoaded", function () {
 		INCOMING_AT: "Incoming at",
 	};
 
+	const alertEffects = {
+		STATION_ISSUE: "Station Issue",
+		SHUTTLE: "Shuttle",
+		SUSPENSION: "Suspension",
+		ELEVATOR_CLOSURE: "Elevator Closure",
+		ESCALATOR_CLOSURE: "Escalator Closure",
+		PARKING_ISSUE: "Parking Issue",
+		BIKE_ISSUE: "Bike Issue",
+		DELAY: "Delay",
+	};
+
+	const alertBadgeColors = {
+		ONGOING: "#ffd700",
+		UPCOMING: "#CECECE",
+		NEW: "#DD93F1",
+	};
+
 	function setCookie(name, value, days) {
 		const date = new Date();
 		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
@@ -64,20 +84,99 @@ document.addEventListener("DOMContentLoaded", function () {
 			const response = await fetch(url);
 			const data = await response.json();
 			alerts = data.data;
-			displayAlerts();
+			displayAlertButton();
+			populateAlertsList();
+
+			alertsMessage.textContent = "Displaying all alerts.";
+			alertsMessage.style.color = "green";
 		} catch (error) {
-			message.textContent = "Error fetching alerts.";
-			message.style.color = "red";
-			console.error("Error fetching alerts:", error);
+			alertsMessage.textContent = "Error displaying alerts.";
+			alertsMessage.style.color = "red";
 		}
 	}
 
-	function displayAlerts() {
+	function displayAlertButton() {
 		if (alerts.length > 0) {
 			alertButton.style.display = "block";
-			console.log(alerts);
 		} else {
 			alertButton.style.display = "none";
+			resetAlertDisplay();
+		}
+	}
+
+	function toggleDescription(headerElement) {
+		const description = headerElement.querySelector(
+			".styled-list-description",
+		);
+		description.classList.toggle("show");
+		const arrow = headerElement.querySelector(".styled-list-arrow");
+		arrow.classList.toggle("rotate");
+	}
+
+	function populateAlertsList() {
+		alertsList.replaceChildren();
+		alerts.forEach((alert) => {
+			const listItem = document.createElement("li");
+			listItem.id = alert.id;
+			listItem.classList.add("styled-list-item");
+
+			const header = document.createElement("div");
+			header.classList.add("styled-list-header");
+			header.onclick = () => toggleDescription(header);
+
+			const title = document.createElement("span");
+			title.classList.add("styled-list-title");
+			const alertEffectText = alertEffects[alert.attributes.effect];
+			title.textContent = alertEffectText
+				? alertEffectText
+				: alert.attributes.effect;
+
+			const badge = document.createElement("span");
+			badge.classList.add("styled-list-badge");
+			badge.style.backgroundColor =
+				alertBadgeColors[alert.attributes.lifecycle];
+			badge.textContent = alert.attributes.lifecycle;
+
+			const arrow = document.createElement("span");
+			arrow.classList.add("styled-list-arrow");
+			arrow.textContent = "▼";
+
+			const description = document.createElement("div");
+			description.classList.add("styled-list-description");
+			description.textContent = alert.attributes.header;
+
+			header.appendChild(title);
+			header.appendChild(badge);
+			header.appendChild(arrow);
+			header.appendChild(description);
+
+			listItem.appendChild(header);
+
+			alertsList.appendChild(listItem);
+		});
+	}
+
+	function resetAlertDisplay() {
+		alertButton.textContent = "⚠️";
+		stopsList.style.display = "block";
+		alertsList.style.display = "none";
+		message.style.display = "block";
+		alertsMessage.style.display = "none";
+	}
+
+	function toggleAlerts() {
+		if (stopsList.style.display === "block") {
+			alertButton.textContent = "❌";
+			stopsList.style.display = "none";
+			alertsList.style.display = "block";
+			message.style.display = "none";
+			alertsMessage.style.display = "block";
+		} else {
+			alertButton.textContent = "⚠️";
+			stopsList.style.display = "block";
+			alertsList.style.display = "none";
+			message.style.display = "block";
+			alertsMessage.style.display = "none";
 		}
 	}
 
@@ -253,6 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function handleLineSelectChange() {
+		resetAlertDisplay();
 		stopsList.innerHTML = "";
 		selected = lineSelect.value;
 
@@ -304,6 +404,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function handleBusSliderChange(event) {
+		resetAlertDisplay();
 		stopsList.innerHTML = "";
 
 		setCookie("busChecked", event.target.checked, 7);
