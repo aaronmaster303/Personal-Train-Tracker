@@ -12,14 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	let stops = [];
 	let alerts = [];
 	let direction = parseInt(getCookie("direction") || "1"); // Default direction is Inbound
+	let selectedStop = "";
+	let selectedStopTime = 0;
 	let selectedLine = getCookie("selectedLine") || "Green-E"; // Get from cookie or default to "Green-E"
 	let selectedBus = getCookie("selectedBus") || "39";
 	let busChecked = stringToBoolean(getCookie("busChecked"));
 	let selected = busChecked ? selectedBus : selectedLine;
 	busSlider.checked = busChecked;
 
-	const SERVER_BASE_URL =
-		"https://simple-train-tracker-app-server-production.up.railway.app";
+	// const SERVER_BASE_URL =
+	// 	"https://simple-train-tracker-app-server-production.up.railway.app";
+	const SERVER_BASE_URL = "http://localhost:3000";
 
 	function stringToBoolean(str) {
 		return str.toLowerCase() === "true";
@@ -77,6 +80,37 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		return "";
 	}
+
+	async function fetchPredictions() {
+		if (!selectedStop) return;
+		if (busChecked) return;
+
+		const url = `${SERVER_BASE_URL}/predictions?route=${selected}&direction_id=${direction}&stop=${selectedStop}`;
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			selectedStopTime = data;
+		} catch (error) {
+			alertsMessage.textContent = "Error displaying predictions.";
+			alertsMessage.style.color = "red";
+		}
+	}
+
+	// async function fetchPredictions() {
+	// 	const stopIds = stops.map((stop) => stop.id);
+	// 	const url = `${SERVER_BASE_URL}/predictions?route=${selected}&direction_id=${direction}&stops=${stopIds}`;
+	// 	try {
+	// 		const response = await fetch(url);
+	// 		const data = await response.json();
+	// 		const predictions = data.data;
+	// 		console.log(stopIds);
+	// 		console.log("PREDICTIONS");
+	// 		console.log(predictions);
+	// 	} catch (error) {
+	// 		alertsMessage.textContent = "Error displaying predictions.";
+	// 		alertsMessage.style.color = "red";
+	// 	}
+	// }
 
 	async function fetchAlerts() {
 		const url = `${SERVER_BASE_URL}/alerts?route=${selected}`;
@@ -295,15 +329,22 @@ document.addEventListener("DOMContentLoaded", function () {
 			message.style.color = "red";
 			console.error("Error fetching train data:", error);
 		}
+
+		fetchPredictions();
 	}
 
 	function updateStopsList(vehicleLocations) {
 		stops.forEach((stop) => {
-			let li = document.querySelector(`#stop-${stop.id}`);
+			let li = document.querySelector(`#${stop.id}`);
 			if (!li) {
 				li = document.createElement("li");
-				li.id = `stop-${stop.id}`;
+				li.id = `${stop.id}`;
 				li.textContent = stop.name;
+				li.classList.add("button-like");
+				li.onclick = () => {
+					selectedStop = stop.id;
+					fetchPredictions();
+				};
 				stopsList.appendChild(li);
 			}
 
@@ -327,6 +368,23 @@ document.addEventListener("DOMContentLoaded", function () {
 					if (statusSpan) li.removeChild(statusSpan);
 				}
 			}
+
+			if (selectedStop === stop.id) {
+				if (!li.classList.contains("selected-location")) {
+					li.classList.add("selected-location");
+					const predictionsSpan = document.createElement("span");
+					predictionsSpan.textContent = `   (${selectedStopTime})`;
+					predictionsSpan.classList.add("predictions-span");
+					li.appendChild(predictionsSpan);
+				}
+			} else {
+				if (li.classList.contains("selected-location")) {
+					li.classList.remove("selected-location");
+					const predictionsSpan =
+						li.querySelector(".predictions-span");
+					if (predictionsSpan) li.removeChild(predictionsSpan);
+				}
+			}
 		});
 	}
 
@@ -343,10 +401,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (busChecked) {
 			fetchStopsBus().then(() => {
 				fetchTrainLocations();
+				fetchPredictions();
 			});
 		} else {
 			fetchStops().then(() => {
 				fetchTrainLocations();
+				fetchPredictions();
 			});
 		}
 	}
@@ -365,10 +425,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		if (busChecked) {
 			fetchStopsBus().then(() => {
+				fetchPredictions();
 				fetchTrainLocations();
 			});
 		} else {
 			fetchStops().then(() => {
+				fetchPredictions();
 				fetchTrainLocations();
 			});
 		}

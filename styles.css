@@ -250,3 +250,11 @@ input:checked + .slider:before {
 .styled-list-description.show {
 	display: block;
 }
+
+.button-like {
+	cursor: pointer;
+}
+
+.button-like:hover {
+	background-color: #eaeaea;
+}
