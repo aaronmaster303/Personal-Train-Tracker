@@ -208,7 +208,7 @@ input:checked + .slider:before {
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 	flex-wrap: wrap;
-	text-align: justify;
+	text-align: left;
 }
 
 .styled-list-header:hover {

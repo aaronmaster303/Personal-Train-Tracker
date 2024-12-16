@@ -89,9 +89,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			alertsMessage.textContent = "Displaying all alerts.";
 			alertsMessage.style.color = "green";
-		} catch (error) {
+		} catch (e) {
 			alertsMessage.textContent = "Error displaying alerts.";
 			alertsMessage.style.color = "red";
+			console.log(e);
 		}
 	}
 
@@ -365,10 +366,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		if (busChecked) {
 			fetchStopsBus().then(() => {
+				setDirectionButton();
 				fetchTrainLocations();
 			});
 		} else {
 			fetchStops().then(() => {
+				setDirectionButton();
 				fetchTrainLocations();
 			});
 		}
@@ -394,12 +397,15 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	function setDirectionButton() {
-		directionButtons.forEach((button) =>
-			button.classList.remove("selected"),
-		);
 		directionButtons.forEach((button) => {
+			button.classList.remove("selected");
+
 			if (parseInt(button.dataset.direction) === direction)
 				button.classList.add("selected");
+
+			if (parseInt(button.dataset.direction) === 0)
+				button.textContent = "↑ " + stops[0].name;
+			else button.textContent = "↓ " + stops[stops.length - 1].name;
 		});
 	}
 
