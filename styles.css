@@ -27,7 +27,8 @@ body {
 
 .inputs {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	justify-content: center;
 }
 
 h1 {
@@ -72,6 +73,12 @@ li {
 	margin-top: 10px;
 	display: flex;
 	justify-content: space-around;
+}
+
+.direction-button-container {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 }
 
 .button-container button {
