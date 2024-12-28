@@ -5,7 +5,7 @@
 
 body {
 	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
+	background-color: var(--line-color-lighter);
 	margin: 20px 0;
 	padding: 0;
 	display: flex;
@@ -72,7 +72,7 @@ li {
 	margin-bottom: 20px;
 	margin-top: 10px;
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 }
 
 .direction-button-container {
@@ -81,11 +81,27 @@ li {
 	gap: 5px;
 }
 
+.direction-button-container-labels {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: var(--line-color-lighter);
+	border-radius: 8px;
+}
+
+.direction-button-label-down {
+	margin-right: 9px;
+}
+
+.direction-button-label-up {
+	margin-right: 9px;
+}
+
 .button-container button {
 	background-color: var(--line-color);
 	border: none;
 	color: white;
-	padding: 10px 20px;
+	padding: 6px 14px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
@@ -93,7 +109,7 @@ li {
 	cursor: pointer;
 	border-radius: 8px;
 	transition-duration: 0.4s;
-	box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+	margin-right: 8px;
 }
 
 .button-container button:hover {
@@ -250,8 +266,8 @@ input:checked + .slider:before {
 .styled-list-description {
 	display: none;
 	margin-top: 10px;
-	color: #555;
 	font-size: 1em;
+	color: #333;
 }
 
 .styled-list-description.show {

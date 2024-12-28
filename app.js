@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	const message = document.getElementById("message");
 	const alertsMessage = document.getElementById("alertsMessage");
 	const directionButtons = document.querySelectorAll(".direction-button");
+	const directionButtonLabelUp = document.querySelector(
+		".direction-button-label-up",
+	);
+	const directionButtonLabelDown = document.querySelector(
+		".direction-button-label-down",
+	);
 	const lineSelect = document.getElementById("lineSelect");
 	const busSlider = document.getElementById("busSlider");
 	const alertButton = document.getElementById("alertButton");
@@ -404,8 +410,10 @@ document.addEventListener("DOMContentLoaded", function () {
 				button.classList.add("selected");
 
 			if (parseInt(button.dataset.direction) === 0)
-				button.textContent = "↑ " + stops[0].name;
-			else button.textContent = "↓ " + stops[stops.length - 1].name;
+				directionButtonLabelUp.textContent = stops[0].name;
+			else
+				directionButtonLabelDown.textContent =
+					stops[stops.length - 1].name;
 		});
 	}
 
