@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	const message = document.getElementById("message");
 	const alertsMessage = document.getElementById("alertsMessage");
 	const directionButtons = document.querySelectorAll(".direction-button");
+	const directionButtonContainerUp = document.querySelector(
+		".direction-button-container-label-up",
+	);
+	const directionButtonContainerDown = document.querySelector(
+		".direction-button-container-label-down",
+	);
 	const directionButtonLabelUp = document.querySelector(
 		".direction-button-label-up",
 	);
@@ -343,8 +349,36 @@ document.addEventListener("DOMContentLoaded", function () {
 		directionButtons.forEach((button) =>
 			button.classList.remove("selected"),
 		);
-		event.target.classList.add("selected");
-		direction = parseInt(event.target.dataset.direction);
+		directionButtonContainerUp.classList.remove("selected");
+		directionButtonContainerDown.classList.remove("selected");
+
+		if (
+			event.target.classList.contains(
+				"direction-button-container-label-up",
+			) ||
+			event.target.classList.contains("direction-button-label-up")
+		) {
+			directionButtons[0].classList.add("selected");
+			direction = 0;
+		} else if (
+			event.target.classList.contains(
+				"direction-button-container-label-down",
+			) ||
+			event.target.classList.contains("direction-button-label-down")
+		) {
+			directionButtons[1].classList.add("selected");
+			direction = 1;
+		} else {
+			event.target.classList.add("selected");
+			direction = parseInt(event.target.dataset.direction);
+		}
+
+		if (direction === 0) {
+			directionButtonContainerUp.classList.add("selected");
+		} else if (direction === 1) {
+			directionButtonContainerDown.classList.add("selected");
+		}
+
 		setCookie("direction", direction, 7);
 
 		if (busChecked) {
@@ -402,7 +436,22 @@ document.addEventListener("DOMContentLoaded", function () {
 		button.addEventListener("click", handleDirectionButtonClick);
 	});
 
+	directionButtonContainerUp.addEventListener(
+		"click",
+		handleDirectionButtonClick,
+	);
+	directionButtonContainerDown.addEventListener(
+		"click",
+		handleDirectionButtonClick,
+	);
+
 	function setDirectionButton() {
+		if (direction === 0) {
+			directionButtonContainerUp.classList.add("selected");
+		} else if (direction === 1) {
+			directionButtonContainerDown.classList.add("selected");
+		}
+
 		directionButtons.forEach((button) => {
 			button.classList.remove("selected");
 

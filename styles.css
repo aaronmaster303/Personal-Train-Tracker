@@ -81,7 +81,7 @@ li {
 	gap: 5px;
 }
 
-.direction-button-container-labels {
+.direction-button-container-label-up {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -90,6 +90,37 @@ li {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.direction-button-container-label-down {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: var(--line-color-lighter);
+	border-radius: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.direction-button-container-label-up:not(.selected) {
+	background-color: #ddd;
+}
+
+.direction-button-container-label-down:not(.selected) {
+	background-color: #ddd;
+}
+
+.direction-button-container-label-up:hover {
+	background-color: var(--line-color-lighter);
+}
+
+.direction-button-container-label-down:hover {
+	background-color: var(--line-color-lighter);
 }
 
 .direction-button-label-down {
@@ -213,6 +244,7 @@ input:checked + .slider:before {
 .direction-label {
 	padding: 10px;
 	font-weight: bold;
+	align-content: center;
 }
 
 .styled-list {
