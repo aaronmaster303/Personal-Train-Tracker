@@ -6,23 +6,23 @@
 		<title>Personal Train Tracker</title>
 		<link rel="stylesheet" href="styles.css" />
 	</head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK70KJT3JM"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+	<script
+		async
+		src="https://www.googletagmanager.com/gtag/js?id=G-VK70KJT3JM"
+	></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag("js", new Date());
 
-        gtag('config', 'G-VK70KJT3JM');
-    </script>
+		gtag("config", "G-VK70KJT3JM");
+	</script>
 	<body>
 		<div class="container">
 			<h1>MBTA Train Tracker</h1>
 			<div class="inputs">
-				<div class="line-container">
-					<label for="lineSelect">Select Line: </label>
-					<select id="lineSelect" class="line-select"></select>
-					<div id="alertButton" title="Show/Hide Alerts" class="alert-button">⚠️</div>
-				</div>
 				<div class="switch-container">
 					<span class="label" id="trainLabel">Train</span>
 					<label class="switch">
@@ -31,28 +31,57 @@
 					</label>
 					<span class="label" id="busLabel">Bus</span>
 				</div>
-				<div class="button-container">
-					<button
-						id="directionButton"
-						data-direction="0"
-						class="direction-button"
+				<div class="line-container">
+					<label for="lineSelect"></label>
+					<select id="lineSelect" class="line-select"></select>
+					<div
+						id="alertButton"
+						title="Show/Hide Alerts"
+						class="alert-button"
 					>
-						↑
-					</button>
-					<div class="direction-label">Direction</div>
-					<button
-						id="directionButton"
-						data-direction="1"
-						class="direction-button selected"
-					>
-						↓
-					</button>
+						⚠️
+					</div>
+				</div>
+			</div>
+			<div class="button-container">
+				<div class="direction-label">Direction</div>
+				<div class="direction-button-container">
+					<div class="direction-button-container-label-up">
+						<button
+							id="directionButton"
+							data-direction="0"
+							class="direction-button"
+						>
+							↑
+						</button>
+						<div
+							class="direction-button-label-up"
+							data-direction="0"
+						>
+							Some random text
+						</div>
+					</div>
+					<div class="direction-button-container-label-down">
+						<button
+							id="directionButton"
+							data-direction="1"
+							class="direction-button selected"
+						>
+							↓
+						</button>
+						<div
+							class="direction-button-label-down"
+							data-direction="1"
+						>
+							Some random text 2
+						</div>
+					</div>
 				</div>
 			</div>
 			<hr />
 			<ul id="stopsList" style="display: block"></ul>
 			<ul id="alertsList" class="styled-list" style="display: none"></ul>
-			<p id="message" style="display: block"</p>
+			<p id="message" style="display: block"></p>
 			<p id="alertsMessage" style="display: none"></p>
 		</div>
 		<script src="app.js"></script>

@@ -3,6 +3,18 @@ document.addEventListener("DOMContentLoaded", function () {
 	const message = document.getElementById("message");
 	const alertsMessage = document.getElementById("alertsMessage");
 	const directionButtons = document.querySelectorAll(".direction-button");
+	const directionButtonContainerUp = document.querySelector(
+		".direction-button-container-label-up"
+	);
+	const directionButtonContainerDown = document.querySelector(
+		".direction-button-container-label-down"
+	);
+	const directionButtonLabelUp = document.querySelector(
+		".direction-button-label-up"
+	);
+	const directionButtonLabelDown = document.querySelector(
+		".direction-button-label-down"
+	);
 	const lineSelect = document.getElementById("lineSelect");
 	const busSlider = document.getElementById("busSlider");
 	const alertButton = document.getElementById("alertButton");
@@ -35,13 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		"Green-B": { primary: "#008000", lighter: "#dcffdc" },
 		"Green-C": { primary: "#008000", lighter: "#dcffdc" },
 		"Green-D": { primary: "#008000", lighter: "#dcffdc" },
-		"Green-E": { primary: "#008000", lighter: "#dcffdc" },
+		"Green-E": { primary: "#008000", lighter: "#dcffdc" }
 	};
 
 	const locationStatus = {
 		IN_TRANSIT_TO: "In transit to",
 		STOPPED_AT: "Stopped at",
-		INCOMING_AT: "Incoming at",
+		INCOMING_AT: "Incoming at"
 	};
 
 	const alertEffects = {
@@ -52,13 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		ESCALATOR_CLOSURE: "Escalator Closure",
 		PARKING_ISSUE: "Parking Issue",
 		BIKE_ISSUE: "Bike Issue",
-		DELAY: "Delay",
+		DELAY: "Delay"
 	};
 
 	const alertBadgeColors = {
 		ONGOING: "#ffd700",
 		UPCOMING: "#CECECE",
-		NEW: "#DD93F1",
+		NEW: "#DD93F1"
 	};
 
 	function setCookie(name, value, days) {
@@ -123,9 +135,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			alertsMessage.textContent = "Displaying all alerts.";
 			alertsMessage.style.color = "green";
-		} catch (error) {
+		} catch (e) {
 			alertsMessage.textContent = "Error displaying alerts.";
 			alertsMessage.style.color = "red";
+			console.log(e);
 		}
 	}
 
@@ -140,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function toggleDescription(headerElement) {
 		const description = headerElement.querySelector(
-			".styled-list-description",
+			".styled-list-description"
 		);
 		description.classList.toggle("show");
 		const arrow = headerElement.querySelector(".styled-list-arrow");
@@ -257,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const data = await response.json();
 			stops = data.data.map((stop) => ({
 				id: stop.id,
-				name: stop.attributes.name,
+				name: stop.attributes.name
 			}));
 			updateStopsList([]);
 		} catch (error) {
@@ -315,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						const stopName = await getStopNameFromId(stopId);
 						const status = vehicle.attributes.current_status;
 						return { stopId, stopName, status };
-					}),
+					})
 				);
 				updateStopsList(vehicleLocations);
 				message.textContent = "Displaying all train locations.";
@@ -349,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 
 			const vehicleAtStop = vehicleLocations.find(
-				(location) => location.stopName === stop.name,
+				(location) => location.stopName === stop.name
 			);
 
 			if (vehicleAtStop) {
@@ -392,10 +405,38 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (busChecked) stopsList.innerHTML = "";
 
 		directionButtons.forEach((button) =>
-			button.classList.remove("selected"),
+			button.classList.remove("selected")
 		);
-		event.target.classList.add("selected");
-		direction = parseInt(event.target.dataset.direction);
+		directionButtonContainerUp.classList.remove("selected");
+		directionButtonContainerDown.classList.remove("selected");
+
+		if (
+			event.target.classList.contains(
+				"direction-button-container-label-up"
+			) ||
+			event.target.classList.contains("direction-button-label-up")
+		) {
+			directionButtons[0].classList.add("selected");
+			direction = 0;
+		} else if (
+			event.target.classList.contains(
+				"direction-button-container-label-down"
+			) ||
+			event.target.classList.contains("direction-button-label-down")
+		) {
+			directionButtons[1].classList.add("selected");
+			direction = 1;
+		} else {
+			event.target.classList.add("selected");
+			direction = parseInt(event.target.dataset.direction);
+		}
+
+		if (direction === 0) {
+			directionButtonContainerUp.classList.add("selected");
+		} else if (direction === 1) {
+			directionButtonContainerDown.classList.add("selected");
+		}
+
 		setCookie("direction", direction, 7);
 
 		if (busChecked) {
@@ -426,11 +467,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (busChecked) {
 			fetchStopsBus().then(() => {
 				fetchPredictions();
+				setDirectionButton();
 				fetchTrainLocations();
 			});
 		} else {
 			fetchStops().then(() => {
 				fetchPredictions();
+				setDirectionButton();
 				fetchTrainLocations();
 			});
 		}
@@ -439,15 +482,15 @@ document.addEventListener("DOMContentLoaded", function () {
 	function updateLineColors(line) {
 		const color = lineColors[line] || {
 			primary: "#000000",
-			lighter: "#f0f0f0",
+			lighter: "#f0f0f0"
 		};
 		document.documentElement.style.setProperty(
 			"--line-color",
-			color.primary,
+			color.primary
 		);
 		document.documentElement.style.setProperty(
 			"--line-color-lighter",
-			color.lighter,
+			color.lighter
 		);
 	}
 
@@ -455,13 +498,33 @@ document.addEventListener("DOMContentLoaded", function () {
 		button.addEventListener("click", handleDirectionButtonClick);
 	});
 
+	directionButtonContainerUp.addEventListener(
+		"click",
+		handleDirectionButtonClick
+	);
+	directionButtonContainerDown.addEventListener(
+		"click",
+		handleDirectionButtonClick
+	);
+
 	function setDirectionButton() {
-		directionButtons.forEach((button) =>
-			button.classList.remove("selected"),
-		);
+		if (direction === 0) {
+			directionButtonContainerUp.classList.add("selected");
+		} else if (direction === 1) {
+			directionButtonContainerDown.classList.add("selected");
+		}
+
 		directionButtons.forEach((button) => {
+			button.classList.remove("selected");
+
 			if (parseInt(button.dataset.direction) === direction)
 				button.classList.add("selected");
+
+			if (parseInt(button.dataset.direction) === 0)
+				directionButtonLabelUp.textContent = stops[0].name;
+			else
+				directionButtonLabelDown.textContent =
+					stops[stops.length - 1].name;
 		});
 	}
 

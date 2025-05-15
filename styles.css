@@ -5,7 +5,7 @@
 
 body {
 	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
+	background-color: var(--line-color-lighter);
 	margin: 20px 0;
 	padding: 0;
 	display: flex;
@@ -27,7 +27,8 @@ body {
 
 .inputs {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	justify-content: center;
 }
 
 h1 {
@@ -71,14 +72,70 @@ li {
 	margin-bottom: 20px;
 	margin-top: 10px;
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
+}
+
+.direction-button-container {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.direction-button-container-label-up {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: var(--line-color-lighter);
+	border-radius: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.direction-button-container-label-down {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: var(--line-color-lighter);
+	border-radius: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.direction-button-container-label-up:not(.selected) {
+	background-color: #ddd;
+}
+
+.direction-button-container-label-down:not(.selected) {
+	background-color: #ddd;
+}
+
+.direction-button-container-label-up:hover {
+	background-color: var(--line-color-lighter);
+}
+
+.direction-button-container-label-down:hover {
+	background-color: var(--line-color-lighter);
+}
+
+.direction-button-label-down {
+	margin-right: 9px;
+}
+
+.direction-button-label-up {
+	margin-right: 9px;
 }
 
 .button-container button {
 	background-color: var(--line-color);
 	border: none;
 	color: white;
-	padding: 10px 20px;
+	padding: 6px 14px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
@@ -86,7 +143,7 @@ li {
 	cursor: pointer;
 	border-radius: 8px;
 	transition-duration: 0.4s;
-	box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+	margin-right: 8px;
 }
 
 .button-container button:hover {
@@ -187,6 +244,7 @@ input:checked + .slider:before {
 .direction-label {
 	padding: 10px;
 	font-weight: bold;
+	align-content: center;
 }
 
 .styled-list {
@@ -208,7 +266,7 @@ input:checked + .slider:before {
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 	flex-wrap: wrap;
-	text-align: justify;
+	text-align: left;
 }
 
 .styled-list-header:hover {
@@ -243,8 +301,8 @@ input:checked + .slider:before {
 .styled-list-description {
 	display: none;
 	margin-top: 10px;
-	color: #555;
 	font-size: 1em;
+	color: #333;
 }
 
 .styled-list-description.show {

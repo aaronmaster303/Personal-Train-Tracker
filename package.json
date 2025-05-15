@@ -1,0 +1,15 @@
+{
+	"devDependencies": {
+		"@eslint/js": "^9.17.0",
+		"eslint": "^9.26.0",
+		"globals": "^15.15.0"
+	},
+	"name": "Personal Train Tracker",
+	"version": "1.0.0",
+	"description": "Real-time train and bus tracker for the MBTA (Boston, MA)",
+	"main": "app.js",
+	"scripts": {},
+	"keywords": [],
+	"author": "Aaron Master",
+	"license": "ISC"
+}
