@@ -94,17 +94,21 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	async function fetchPredictions() {
-		if (!selectedStop) return;
+		// if (!selectedStop) return;
 		if (busChecked) return;
 
-		const url = `${SERVER_BASE_URL}/predictions?route=${selected}&direction_id=${direction}&stop=${selectedStop}`;
-		try {
-			const response = await fetch(url);
-			const data = await response.json();
-			selectedStopTime = data;
-		} catch (error) {
-			alertsMessage.textContent = "Error displaying predictions.";
-			alertsMessage.style.color = "red";
+		for (const stop of stops) {
+			const url = `${SERVER_BASE_URL}/predictions?route=${selected}&direction_id=${direction}&stop=${stop.id}`;
+			try {
+				const response = await fetch(url);
+				const data = await response.json();
+				// selectedStopTime = data;
+				stop.prediction = data;
+				// console.log(stop.prediction);
+			} catch (error) {
+				alertsMessage.textContent = "Error displaying predictions.";
+				alertsMessage.style.color = "red";
+			}
 		}
 	}
 
@@ -349,16 +353,31 @@ document.addEventListener("DOMContentLoaded", function () {
 	function updateStopsList(vehicleLocations) {
 		stops.forEach((stop) => {
 			let li = document.querySelector(`#${stop.id}`);
+			let predictionsSpan = document.querySelector(
+				`#${stop.id}-predictions-span`
+			);
+
 			if (!li) {
 				li = document.createElement("li");
 				li.id = `${stop.id}`;
 				li.textContent = stop.name;
 				li.classList.add("button-like");
-				li.onclick = () => {
-					selectedStop = stop.id;
-					fetchPredictions();
-				};
+				// li.onclick = () => {
+				// 	selectedStop = stop.id;
+				// 	fetchPredictions();
+				// };
 				stopsList.appendChild(li);
+			}
+
+			if (!predictionsSpan) {
+				predictionsSpan = document.createElement("span");
+				predictionsSpan.id = `${stop.id}-predictions-span`;
+				predictionsSpan.classList.add("predictions-span");
+				predictionsSpan.textContent = `   ${stop.prediction}min`;
+
+				li.appendChild(predictionsSpan);
+			} else {
+				predictionsSpan.textContent = `   ${stop.prediction}min`;
 			}
 
 			const vehicleAtStop = vehicleLocations.find(
@@ -382,22 +401,24 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 			}
 
-			if (selectedStop === stop.id) {
-				if (!li.classList.contains("selected-location")) {
-					li.classList.add("selected-location");
-					const predictionsSpan = document.createElement("span");
-					predictionsSpan.textContent = `   (${selectedStopTime})`;
-					predictionsSpan.classList.add("predictions-span");
-					li.appendChild(predictionsSpan);
-				}
-			} else {
-				if (li.classList.contains("selected-location")) {
-					li.classList.remove("selected-location");
-					const predictionsSpan =
-						li.querySelector(".predictions-span");
-					if (predictionsSpan) li.removeChild(predictionsSpan);
-				}
-			}
+			// predictionsSpan.textContent = `   ${selectedStopTime}min`;
+
+			// if (selectedStop === stop.id) {
+			// 	if (!li.classList.contains("selected-location")) {
+			// 		li.classList.add("selected-location");
+			// 		const predictionsSpan = document.createElement("span");
+			// 		predictionsSpan.textContent = `   ${selectedStopTime}min`;
+			// 		predictionsSpan.classList.add("predictions-span");
+			// 		li.appendChild(predictionsSpan);
+			// 	}
+			// } else {
+			// 	if (li.classList.contains("selected-location")) {
+			// 		li.classList.remove("selected-location");
+			// 		const predictionsSpan =
+			// 			li.querySelector(".predictions-span");
+			// 		if (predictionsSpan) li.removeChild(predictionsSpan);
+			// 	}
+			// }
 		});
 	}
 
@@ -548,6 +569,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				fetchAlerts();
 				setDirectionButton();
 				fetchTrainLocations();
+				fetchPredictions();
 				setInterval(fetchTrainLocations, 1000);
 			});
 		});
@@ -557,6 +579,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				fetchAlerts();
 				setDirectionButton();
 				fetchTrainLocations();
+				fetchPredictions();
 				setInterval(fetchTrainLocations, 1000);
 			});
 		});
