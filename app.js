@@ -4,16 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
 	const alertsMessage = document.getElementById("alertsMessage");
 	const directionButtons = document.querySelectorAll(".direction-button");
 	const directionButtonContainerUp = document.querySelector(
-		".direction-button-container-label-up"
+		".direction-button-container-label-up",
 	);
 	const directionButtonContainerDown = document.querySelector(
-		".direction-button-container-label-down"
+		".direction-button-container-label-down",
 	);
 	const directionButtonLabelUp = document.querySelector(
-		".direction-button-label-up"
+		".direction-button-label-up",
 	);
 	const directionButtonLabelDown = document.querySelector(
-		".direction-button-label-down"
+		".direction-button-label-down",
 	);
 	const lineSelect = document.getElementById("lineSelect");
 	const busSlider = document.getElementById("busSlider");
@@ -47,13 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		"Green-B": { primary: "#008000", lighter: "#dcffdc" },
 		"Green-C": { primary: "#008000", lighter: "#dcffdc" },
 		"Green-D": { primary: "#008000", lighter: "#dcffdc" },
-		"Green-E": { primary: "#008000", lighter: "#dcffdc" }
+		"Green-E": { primary: "#008000", lighter: "#dcffdc" },
 	};
 
 	const locationStatus = {
-		IN_TRANSIT_TO: "In transit to",
-		STOPPED_AT: "Stopped at",
-		INCOMING_AT: "Incoming at"
+		IN_TRANSIT_TO: "Incoming in ",
+		STOPPED_AT: "Arrived",
+		INCOMING_AT: "Incoming in ",
 	};
 
 	const alertEffects = {
@@ -64,13 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		ESCALATOR_CLOSURE: "Escalator Closure",
 		PARKING_ISSUE: "Parking Issue",
 		BIKE_ISSUE: "Bike Issue",
-		DELAY: "Delay"
+		DELAY: "Delay",
 	};
 
 	const alertBadgeColors = {
 		ONGOING: "#ffd700",
 		UPCOMING: "#CECECE",
-		NEW: "#DD93F1"
+		NEW: "#DD93F1",
 	};
 
 	function setCookie(name, value, days) {
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function toggleDescription(headerElement) {
 		const description = headerElement.querySelector(
-			".styled-list-description"
+			".styled-list-description",
 		);
 		description.classList.toggle("show");
 		const arrow = headerElement.querySelector(".styled-list-arrow");
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const data = await response.json();
 			stops = data.data.map((stop) => ({
 				id: stop.id,
-				name: stop.attributes.name
+				name: stop.attributes.name,
 			}));
 			updateStopsList([]);
 		} catch (error) {
@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						const stopName = await getStopNameFromId(stopId);
 						const status = vehicle.attributes.current_status;
 						return { stopId, stopName, status };
-					})
+					}),
 				);
 				updateStopsList(vehicleLocations);
 				message.textContent = "Displaying all train locations.";
@@ -354,71 +354,55 @@ document.addEventListener("DOMContentLoaded", function () {
 		stops.forEach((stop) => {
 			let li = document.querySelector(`#${stop.id}`);
 			let predictionsSpan = document.querySelector(
-				`#${stop.id}-predictions-span`
+				`#${stop.id}-predictions-span`,
 			);
 
 			if (!li) {
 				li = document.createElement("li");
 				li.id = `${stop.id}`;
 				li.textContent = stop.name;
-				li.classList.add("button-like");
-				// li.onclick = () => {
-				// 	selectedStop = stop.id;
-				// 	fetchPredictions();
-				// };
 				stopsList.appendChild(li);
 			}
+
+			const vehicleAtStop = vehicleLocations.find(
+				(location) => location.stopName === stop.name,
+			);
+
+			if (vehicleAtStop && !li.classList.contains("current-location")) {
+				li.classList.add("current-location");
+				// const status = vehicleAtStop.status;
+				// const statusSpan = document.createElement("span");
+				// statusSpan.textContent = `(${locationStatus[status]})`;
+				// statusSpan.classList.add("status-span");
+				// li.appendChild(statusSpan);
+			} else if (
+				!vehicleAtStop &&
+				li.classList.contains("current-location")
+			) {
+				li.classList.remove("current-location");
+				// const statusSpan = li.querySelector(".status-span");
+				// if (statusSpan) li.removeChild(statusSpan);
+			}
+
+			if (!stop.prediction) {
+				return;
+			}
+
+			const seconds = stop.prediction.seconds;
+			const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+			const timeUntilArrivalFormatted = `${stop.prediction.minutes}:${formattedSeconds}`;
 
 			if (!predictionsSpan) {
 				predictionsSpan = document.createElement("span");
 				predictionsSpan.id = `${stop.id}-predictions-span`;
 				predictionsSpan.classList.add("predictions-span");
-				predictionsSpan.textContent = `   ${stop.prediction}min`;
-
+				predictionsSpan.textContent = ``;
 				li.appendChild(predictionsSpan);
+			} else if (vehicleAtStop) {
+				predictionsSpan.textContent = `${locationStatus[vehicleAtStop.status]}${vehicleAtStop.status !== "STOPPED_AT" ? timeUntilArrivalFormatted : ""}`;
 			} else {
-				predictionsSpan.textContent = `   ${stop.prediction}min`;
+				predictionsSpan.textContent = `ᯤ ${timeUntilArrivalFormatted}`;
 			}
-
-			const vehicleAtStop = vehicleLocations.find(
-				(location) => location.stopName === stop.name
-			);
-
-			if (vehicleAtStop) {
-				if (!li.classList.contains("current-location")) {
-					li.classList.add("current-location");
-					const status = vehicleAtStop.status;
-					const statusSpan = document.createElement("span");
-					statusSpan.textContent = `   (${locationStatus[status]})`;
-					statusSpan.classList.add("status-span");
-					li.appendChild(statusSpan);
-				}
-			} else {
-				if (li.classList.contains("current-location")) {
-					li.classList.remove("current-location");
-					const statusSpan = li.querySelector(".status-span");
-					if (statusSpan) li.removeChild(statusSpan);
-				}
-			}
-
-			// predictionsSpan.textContent = `   ${selectedStopTime}min`;
-
-			// if (selectedStop === stop.id) {
-			// 	if (!li.classList.contains("selected-location")) {
-			// 		li.classList.add("selected-location");
-			// 		const predictionsSpan = document.createElement("span");
-			// 		predictionsSpan.textContent = `   ${selectedStopTime}min`;
-			// 		predictionsSpan.classList.add("predictions-span");
-			// 		li.appendChild(predictionsSpan);
-			// 	}
-			// } else {
-			// 	if (li.classList.contains("selected-location")) {
-			// 		li.classList.remove("selected-location");
-			// 		const predictionsSpan =
-			// 			li.querySelector(".predictions-span");
-			// 		if (predictionsSpan) li.removeChild(predictionsSpan);
-			// 	}
-			// }
 		});
 	}
 
@@ -426,14 +410,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (busChecked) stopsList.innerHTML = "";
 
 		directionButtons.forEach((button) =>
-			button.classList.remove("selected")
+			button.classList.remove("selected"),
 		);
 		directionButtonContainerUp.classList.remove("selected");
 		directionButtonContainerDown.classList.remove("selected");
 
 		if (
 			event.target.classList.contains(
-				"direction-button-container-label-up"
+				"direction-button-container-label-up",
 			) ||
 			event.target.classList.contains("direction-button-label-up")
 		) {
@@ -441,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			direction = 0;
 		} else if (
 			event.target.classList.contains(
-				"direction-button-container-label-down"
+				"direction-button-container-label-down",
 			) ||
 			event.target.classList.contains("direction-button-label-down")
 		) {
@@ -503,15 +487,15 @@ document.addEventListener("DOMContentLoaded", function () {
 	function updateLineColors(line) {
 		const color = lineColors[line] || {
 			primary: "#000000",
-			lighter: "#f0f0f0"
+			lighter: "#f0f0f0",
 		};
 		document.documentElement.style.setProperty(
 			"--line-color",
-			color.primary
+			color.primary,
 		);
 		document.documentElement.style.setProperty(
 			"--line-color-lighter",
-			color.lighter
+			color.lighter,
 		);
 	}
 
@@ -521,11 +505,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	directionButtonContainerUp.addEventListener(
 		"click",
-		handleDirectionButtonClick
+		handleDirectionButtonClick,
 	);
 	directionButtonContainerDown.addEventListener(
 		"click",
-		handleDirectionButtonClick
+		handleDirectionButtonClick,
 	);
 
 	function setDirectionButton() {
