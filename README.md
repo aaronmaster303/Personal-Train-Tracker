@@ -2,7 +2,7 @@
 
 **A real-time MBTA transit tracker for Boston trains and buses — a web-based companion to the [iOS app](https://apps.apple.com/us/app/mbta-train-bus-tracker/id6748243506), with 350+ active users.**
 
-## Screenshot
+## Screenshots
 
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/31070148-1e16-41a0-a234-fb3bc4aff2ef" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/7b0ba3a6-8122-46dc-986c-ebaa84f07cbb" />
