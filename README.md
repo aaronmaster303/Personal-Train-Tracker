@@ -4,7 +4,9 @@
 
 ## Screenshot
 
-<img width="976" height="1762" alt="image" src="https://github.com/user-attachments/assets/631f313c-1ef5-4741-8015-8a0d7e1e6ada" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/31070148-1e16-41a0-a234-fb3bc4aff2ef" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/7b0ba3a6-8122-46dc-986c-ebaa84f07cbb" />
+
 
 
 ## Features
