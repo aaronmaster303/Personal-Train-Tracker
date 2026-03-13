@@ -4,7 +4,8 @@
 
 ## Screenshot
 
-> _Add a screenshot here — e.g., the stop list with live vehicle indicators._
+<img width="976" height="1762" alt="image" src="https://github.com/user-attachments/assets/631f313c-1ef5-4741-8015-8a0d7e1e6ada" />
+
 
 ## Features
 
